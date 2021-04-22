@@ -5,8 +5,6 @@ freenom_email = os.environ["FREENOM_EMAIL"]
 freenom_pw = os.environ["FREENOM_PW"]
 freenom_domain_name = os.environ["FREENOM_DOMAIN_NAME"]
 freenom_domain_id = os.environ["FREENOM_DOMAIN_ID"]
-telegram_bot_id = os.environ["TELEGRAM_BOT_ID"]
-telegram_chat_id = os.environ["TELEGRAM_CHAT_ID"]
 dns_data_dict = json.loads(os.environ["DNS_JSON"])
 BASE_URL="https://my.freenom.com"
 BASE_URL="https://my.freenom.com"
@@ -22,19 +20,6 @@ new_ip = ''
 s = requests.Session()
 token = None
 update_message = 'No update message yet'
-
-def telegramQueryBuilder(message, method="sendMessage"):
-  return f"https://api.telegram.org/{telegram_bot_id}/{method}?chat_id={telegram_chat_id}&text={message}"
-
-def notifier(text, imagepath=''):
-  if len(imagepath) == 0:
-    telegram_message = quote(f"ddns-service: {text}")
-    requests.get(telegramQueryBuilder(telegram_message))
-  else:
-    files = {'photo': open(imagepath, 'rb')}
-    telegram_message = quote(f"ddns-freenom-script: {text}")
-    requests.post(telegramQueryBuilder(telegram_message, method="sendPhoto"), files=files)
-  return
 
 def get_token(url: str):
   r = s.get(url)
@@ -88,7 +73,6 @@ try:
 except Exception as error:
   update_message = f"Error retrieving IP-Address: {error}"
   print(update_message)
-  notifier(update_message)
   exit()
 if current_ip != new_ip:
   print('Starting Login')
@@ -99,7 +83,6 @@ if current_ip != new_ip:
         raise Exception('login failed')
   except:
     update_message = 'login failed'
-    notifier(update_message)
     print(update_message)
     exit()
 else:
@@ -117,15 +100,12 @@ try:
   if no_update_error and succesful_change:
     update_message = f'DNS-UPDATE Successfull. IP updated to:{new_ip}'
     print(update_message)
-    notifier(update_message)
   else:
     update_message = f"DNS-UPDATE unsuccessfull - no_update_error: {no_update_error}, succesful_change:{succesful_change}"
     print(update_message)
-    notifier(update_message)
     exit()
 except:
   update_message = 'Error while updating'
-  notifier(update_message)
   print(update_message)
   exit()
 
