@@ -100,10 +100,13 @@ try:
   if no_update_error and succesful_change:
     update_message = f'DNS-UPDATE Successfull. IP updated to:{new_ip}'
     print(update_message)
-  else:
-    update_message = f"DNS-UPDATE unsuccessfull - no_update_error: {no_update_error}, succesful_change:{succesful_change}"
-    print(update_message)
-    exit()
+  elif current_ip != '':
+      update_message = f"DNS-UPDATE unsuccessfull - no_update_error: {no_update_error}, succesful_change:{succesful_change}"
+      print(update_message)
+      exit()
+  elif r.text.find('There were no changes') != -1:
+    print('no changes made')
+
 except:
   update_message = 'Error while updating'
   print(update_message)
