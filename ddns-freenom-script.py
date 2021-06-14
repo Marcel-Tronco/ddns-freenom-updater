@@ -176,7 +176,7 @@ def update_ip(domain_data_list: List[dict], domain_list: List[str]) -> List[dict
       update_success = update_response_checker(r, domain_name)
       if update_success:
         domain["current_ip"] = new_ip
-      updated_freenom_data.append(domain)
+    updated_freenom_data.append(domain)
   return updated_freenom_data
 
 # Data Processing
